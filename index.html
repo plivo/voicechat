@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Voicechat : VoiceChat is a set of APIs to create conference rooms on the fly to be used in the browser. Its built using the Plivo WebSDK and APIs." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Voicechat</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/plivo/voicechat">View on GitHub</a>
+
+          <h1 id="project_title">Voicechat</h1>
+          <h2 id="project_tagline">VoiceChat is a set of APIs to create conference rooms on the fly to be used in the browser. Its built using the Plivo WebSDK and APIs.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/plivo/voicechat/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/plivo/voicechat/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="voicechat" class="anchor" href="#voicechat"><span class="octicon octicon-link"></span></a><a href="http://voicechatapi.com/">VoiceChat</a>
+</h1>
+
+<p>VoiceChat is a set of APIs to create ad-hoc conferences to be used in the browser. Its built using the <a href="https://plivo.com/docs/sdk/web/">Plivo WebSDK</a> and APIs.</p>
+
+<h1>
+<a name="looking-to-self-host" class="anchor" href="#looking-to-self-host"><span class="octicon octicon-link"></span></a>Looking to self-host?</h1>
+
+<h2>
+<a name="clone-this-repo" class="anchor" href="#clone-this-repo"><span class="octicon octicon-link"></span></a>Clone this repo</h2>
+
+<pre><code>$ git clone git@github.com:plivo/voicechat.git
+</code></pre>
+
+<h2>
+<a name="configure" class="anchor" href="#configure"><span class="octicon octicon-link"></span></a>Configure</h2>
+
+<p>Create a Plivo account if you haven't, then grab the Auth ID and Auth Token from the <a href="https://plivo.com/dashboard/">dashboard</a>.
+Add the credentials to <code>config.py</code></p>
+
+<pre><code>PLIVO_AUTH_ID = {PLIVO_AUTH_ID}
+PLIVO_AUTH_TOKEN = {PLIVO_AUTH_TOKEN}
+</code></pre>
+
+<h2>
+<a name="deploying-to-heroku" class="anchor" href="#deploying-to-heroku"><span class="octicon octicon-link"></span></a>Deploying to Heroku</h2>
+
+<p>Create a Heroku account if you haven't.</p>
+
+<pre><code>$ cd voicechat
+$ heroku create {app_name} -s cedar
+$ git push heroku master
+$ heroku addons:add redistogo:nano --app {app_name}
+$ heroku ps:scale web=1
+</code></pre>
+
+<h2>
+<a name="test-your-application" class="anchor" href="#test-your-application"><span class="octicon octicon-link"></span></a>Test your application</h2>
+
+<p>Go to {app_name}.herokuapp.com</p>
+
+<h1>
+<a name="api-docs" class="anchor" href="#api-docs"><span class="octicon octicon-link"></span></a>API Docs</h1>
+
+<h2>
+<a name="create-a-conference-name" class="anchor" href="#create-a-conference-name"><span class="octicon octicon-link"></span></a>Create a conference name</h2>
+
+<pre><code>POST /api/v1/conference/
+</code></pre>
+
+<h3>
+<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h3>
+
+<pre><code>$ curl -XPOST http://voicechatapi.com/api/v1/conference/
+{
+    "conference_name": "p12ygdwt1", 
+    "conference_url": "http://voicechatapi.com/p12ygdwt1/"
+}
+</code></pre>
+
+<h2>
+<a name="call-a-mobile--landline-phone-number-pstn-into-the-bridge" class="anchor" href="#call-a-mobile--landline-phone-number-pstn-into-the-bridge"><span class="octicon octicon-link"></span></a>Call a mobile &amp; landline phone number (PSTN) into the bridge</h2>
+
+<pre><code>POST /api/v1/conference/&lt;conference_name&gt;/
+</code></pre>
+
+<h3>
+<a name="parameters" class="anchor" href="#parameters"><span class="octicon octicon-link"></span></a>Parameters</h3>
+
+<pre><code>to - The phone number to be called.
+clid - The caller id which will be used. (The phone number to be shown in the recipient's phone.)
+</code></pre>
+
+<h3>
+<a name="example-1" class="anchor" href="#example-1"><span class="octicon octicon-link"></span></a>Example</h3>
+
+<pre><code>$ curl -XPOST -d "to={1415123####}&amp;clid={1415123####}" http://voicechatapi.com/api/v1/conference/&lt;conference_name&gt;/
+{
+    "success": True,
+    "message": "Call has been queued"
+}
+</code></pre>
+
+<p><a href="https://bitdeli.com/free" title="Bitdeli Badge"><img src="https://d2weczhvl823v0.cloudfront.net/plivo/voicechat/trend.png" alt="Bitdeli Badge"></a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Voicechat maintained by <a href="https://github.com/plivo">plivo</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
