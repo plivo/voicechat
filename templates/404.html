@@ -1,0 +1,32 @@
+{% extends "base.html" %} 
+
+{% block container %}
+<div class="jumbotron">
+    <div class="container" style="padding: 0 15px;">
+        <div class="row">
+            <div class="col-md-5 col-md-offset-1 bt-space">
+                <h3>Oops... the room does not exist.</h3>
+                <p class="bt-space">Don't worry. Nothing serious. Just create a new room and share a url with your friends again.</p>
+                <button class="btn btn-hg btn-embossed btn-warning" onclick="createBridge()">Create a new audio chat room</button>
+            </div>
+            <div class="col-md-5 col-md-offset-1 bt-space">
+                <img src="../static/img/voicechatapi_logo_chrome_icon_500x500.png" alt="voice chat api logo">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
+
+{% block js %}
+<script type="text/javascript">
+function createBridge() {
+    $.ajax({
+        'url': '/api/v1/bridge/',
+        'type': 'GET',
+        'success': function(data) {
+            window.location.href = "/" + data['conference_bridge'] + "/";
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+    <h3>Creating a new voice chat room for you...</h3>
+    <div class="progress progress-striped">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+            <span class="sr-only">40% Complete (success)</span>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="/static/js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $.ajax({
+        'url': '/api/v1/conference/',
+        'type': 'POST',
+        'success': function(data) {
+            window.location.href = "/" + data['conference_name'] + "/";
+        }
+    });
+});
+</script>
+
+</html>

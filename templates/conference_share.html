@@ -1,0 +1,170 @@
+{% extends "base.html" %} {% block container %}
+<div class="row">
+    <div class="col-md-11 col-md-offset-1">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+                    <span class="sr-only">Toggle navigation</span>
+                </button>
+                <a href="/">
+                    <img src="../static/img/voicechatapi_logo.png" alt="voice chat api logo" style="min-width: 100px;
+padding: 10px;max-width: 150px;margin-right: 100px;" />
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-01">
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="/">Create a new room</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+<div class="row center bt-space">
+    <div class="col-sm-8 col-sm-offset-2">
+        <h3 id="status-msg">Your conference is waiting.</h3>
+        <p>
+            <button type="button" class="btn btn-default btn-lg mute" onclick="mute();">
+                <span class="glyphicon glyphicon-volume-off">Mute</span>
+            </button>
+            <button type="button" class="btn btn-default btn-lg unmute" onclick="unmute();">
+                <span class="glyphicon glyphicon-volume-up">Unmute</span>
+            </button>
+            <a class="btn btn-hg btn-info" id="make_call" href="#" onclick="call();">Click to join your conference</a>
+        </p>
+        <div class="media-permission">No</div>
+        <div class="col-sm-8 col-sm-offset-2"><div id="note"><p>This conference was brought to you by VoiceChatAPI.com. You can create your own free instant conference room <a href="/">here</a>.</p></div></div>
+
+        {% if outbound_pstn %}
+        <form class="form-inline" role="form" id="call-in-form">
+            <div class="form-group">
+                <label class="sr-only">Phone Number</label>
+                <input type="text" class="form-control" id="to-number" placeholder="Enter phone number">
+            </div>
+            <button type="submit" class="btn btn-default" id="call-in">Call in</button>
+            <div id="calling-text" style="display:none;">Calling...</div>
+        </form>
+        {% endif %}
+    </div>
+</div>
+<div class="modal fade" id="action-needed">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Allow your browser to use the microphone</h4>
+            </div>
+            <div class="modal-body" id="browser-action">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block css %}
+<style>
+    #note {
+        display: none;
+    }
+    .mute {
+        display: none;
+    }
+    .unmute {
+        display: none;
+    }
+    .media-permission {
+        display: none;
+    }
+
+</style>
+
+{% endblock %} {% block js %}
+<script type="text/javascript">
+function webrtcNotSupportedAlert() {
+    $('#txtStatus').text("");
+}
+
+function onReady() {
+    login();
+}
+
+function login() {
+    Plivo.conn.login("{{response.endpoint_username}}", "{{response.endpoint_password}}");
+}
+
+function make_call() {
+    Plivo.conn.call("conference");
+    $('#make_call').toggleClass("btn-danger");
+    $('#make_call').text('Click to leave your conference');
+    $('.mute').show();
+    $('#status-msg').text('You are now in the conference.');
+    $('#note').show();
+}
+
+function end_call() {
+    Plivo.conn.hangup();
+    $('#make_call').toggleClass("btn-danger");
+    $('#make_call').text('Click to join your conference');
+    $('.mute').hide();
+    $('.unmute').hide();
+    $('#status-msg').text('You have left the conference.');
+}
+
+function call() {
+    if ($('#make_call').text() == "Click to join your conference") {
+        if ($('.media-permission').text() == 'No') {
+            $('#action-needed').modal();
+        } else {
+            make_call();
+        }
+    } else if ($('#make_call').text() == "Click to leave your conference") {
+        end_call();
+    }
+}
+
+function mute() {
+    Plivo.conn.mute();
+    $('.mute').hide();
+    $('.unmute').show();
+}
+
+function unmute() {
+    Plivo.conn.unmute();
+    $('.unmute').hide();
+    $('.mute').show();
+}
+
+function onMediaPermission(result) {
+    if (result) {
+        $('.media-permission').text('Yes');
+    }
+}
+$(document).ready(function() {
+    Plivo.onWebrtcNotSupported = webrtcNotSupportedAlert;
+    Plivo.onReady = onReady;
+    Plivo.onMediaPermission = onMediaPermission;
+    config = {};
+    Plivo.init(config);
+    }); 
+
+{% if outbound_pstn %}
+$("#call-in-form").submit(function(event)  {
+        event.preventDefault();
+        $('#call-in').attr("disabled", true);
+        var $form = $(this);
+        $.post( "/api/v1/conference/{{response.conference_name}}/", 
+            { to: $form.find("input[id='to-number']").val()})
+        .done(function(data) {
+            $('#to-number').val("");
+            $('#call-in').attr("disabled", false);
+            $('#calling-text').show();
+            $('#calling-text').fadeOut(8000);
+            })
+        });
+{% endif %}
+
+if (bowser.chrome) {
+    $('#browser-action').html('<p>Click on "Allow" in the pop-up bar at the top of your screen. If you don\'t see the prompt, please refresh this page.</p><img class="bt-space" src="../static/img/prompt_ifdenied.png" alt="chrome webrtc approve" width="100%;"/><p>If you have clicked on \'Deny\', you can reconfigure the setting as the image below.</p><img src="../static/img/prompt.png" alt="webrtc mic if denied" width="100%;" />');
+} else {
+    $('#browser-action').html('<p>Click on "Allow" in the pop-up bar at the top of your screen. If you don\'t see the prompt, please refresh this page.</p><img src="../static/img/prompt_ifflash.png" alt="flash approve" width="100%;"/>');
+}
+</script>
+{% endblock %}

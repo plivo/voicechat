@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Voice Chat API — free audio conference web service powered by WebRTC.</title>
+        <meta name="Description" content="Do voice chat anywhere. Free audio conference service powered by WebRTC and exposed via a simple API.">
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+        <link href="/static/css/flat-ui.css" rel="stylesheet">
+        <link href="/static/css/prism.css" rel="stylesheet">
+        <link rel="icon" type="image/png" href="../static/img/fav.ico">
+    </head>
+
+    <body>
+        <div id="wrap">
+              <div id="main" class="container clear-top">
+
+            {% block container %} {% endblock %}
+        </div>
+
+        </div>
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-5 col-sm-offset-1">
+                        <h3 class="footer-title">Follow us</h3>
+                        <p>We love hearing from you, so email us at <a href="mailto:community@plivo.com">community@plivo.com</a>. Follow us on Twitter and Github for updates on upcoming project announcements.</p>
+                        <p class="pvl">
+                        <a href="https://twitter.com/plivo" class="twitter-follow-button" data-show-count="true" data-show-screen-name="true">@plivo</a>
+                        <iframe src="http://ghbtns.com/github-btn.html?user=plivo&amp;repo=voicechat&amp;type=fork" allowtransparency="true" frameborder="0" scrolling="0" width="53" height="20"></iframe>
+                        <iframe src="http://ghbtns.com/github-btn.html?user=plivo&amp;type=follow" allowtransparency="true" frameborder="0" scrolling="0" width="165" height="20"></iframe>
+                        </p>
+                        <a class="footer-brand" href="http://plivo.com" target="_blank">
+                            <p>Built with &nbsp;
+                            <span class="fui-heart"></span>&nbsp;&nbsp;by&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                            <img src="../static/img/plivo_logo.png" alt="plivo.com">
+                        </a>
+                    </div>
+                    <!-- /col-sm-7 -->
+
+                    <div class="col-sm-4 col-sm-offset-1">
+                        <div class="footer-banner">
+                            <h6 class="footer-title">VoiceChatAPI is brought to you by Plivo</h6>
+                            <p class="bt-space">A simple REST API for Voice and SMS applications. Check out the Plivo API and start your free trial today.</p>
+                            <div class="form-group center">
+                                <a href="https://plivo.com/?utm_source=voicechatapi&amp;utm_medium=opensource&amp;utm_campaign=opensource_voicechatapi">
+                                    <button class="btn btn-hg btn-embossed btn-warning" onclick="createBridge()">Learn more about Plivo</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+        <!-- Le javascript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <style>
+            html, body {
+                height: 100%;
+            }
+
+            #wrap {
+                min-height: 100%;
+            }
+
+            #main {
+                overflow:auto;
+                padding-bottom:150px; /* this needs to be bigger than footer height*/
+            }
+
+            .footer {
+                position: relative;
+                margin-top: -150px; /* negative value of footer height */
+                height: 150px;
+                clear:both;
+                padding-top:20px;
+            } 
+        </style>
+        {% block css %}{% endblock %}
+
+        <script type="text/javascript" src="/static/js/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" src="/static/js/bowser.min.js"></script>
+        <script type="text/javascript" src="https://s3.amazonaws.com/plivosdk/web/plivo.min.js"></script>
+        <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+        {% block js %}{% endblock %}
+        <!-- Google analytics -->
+        <script>
+            (function(i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function() {
+                    (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date();
+                    a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                    a.async = 1;
+                    a.src = g;
+                    m.parentNode.insertBefore(a, m)
+                    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+                    ga('create', 'UA-23474761-4', 'voicechatapi.com');
+                    ga('send', 'pageview');
+                </script>
+                <!-- end google analytics -->
+
+                <!-- Twitter Follow Button Starts -->
+                <script>
+                    ! function(d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0],
+                        p = /^http:/.test(d.location) ? 'http' : 'https';
+                        if (!d.getElementById(id)) {
+                            js = d.createElement(s);
+                            js.id = id;
+                            js.src = p + '://platform.twitter.com/widgets.js';
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }
+                        }(document, 'script', 'twitter-wjs');
+                    </script>
+                    <!-- Twitter Follow Button Ends -->
+
+
+                </body>
+
+            </html>
