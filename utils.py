@@ -40,8 +40,8 @@ def make_id(size=6):
     """
     # NB: Do we want to use capital letters? More traditional for Base36
     alphabet = "0123456789abcdefghijklmnopqrstuvwxyz"
-    redis = get_redis_connection()
-    unique_val = redis.incr('ID_AUTO_INCR', 1)
+    with redis_client() as redis:
+        unique_val = redis.incr('ID_AUTO_INCR', 1)
     rand = random.Random(unique_val)
     return ''.join(random.choice(alphabet) for _ in range(size))
 
@@ -55,7 +55,7 @@ def redis_client():
     point it will fail with an exception).
     """
     client = redis.StrictRedis(connection_pool=_pool)
-    yield
+    yield client
     _pool.release(client)
     
 
