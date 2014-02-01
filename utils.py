@@ -1,6 +1,6 @@
 import base64
 import config
-import contextlib
+from contextlib import contextmanager
 import os
 import plivo
 import random
