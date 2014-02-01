@@ -11,7 +11,7 @@ import os
 from flask import Flask, render_template, request, url_for, make_response, jsonify
 import plivo
 import config
-from utils import get_redis_connection, get_plivo_connection, tinyid
+from utils import get_plivo_connection, make_id, redis_client
 
 app = Flask(__name__)
 
@@ -59,8 +59,8 @@ def conf(conference_name):
     answered, the call will be put into a conference.
     """
 
-    redis_conn = get_redis_connection()
-    room_exists = redis_conn.exists(conference_name)
+    with redis_client() as redis_conn:
+        room_exists = redis_conn.exists(conference_name)
     plivo_response = plivo.XML.Response()
 
     if not room_exists:
@@ -91,10 +91,10 @@ def conference(conference_name):
     """
     
     if conference_exists(conference_name):
-        redis_conn = get_redis_connection()
-        endpoint_username = redis_conn.hget(conference_name, 'username')
-        endpoint_password = redis_conn.hget(conference_name, 'password')
-        inbound_did = redis_conn.hget(conference_name, 'inbound_did')
+        with redis_client() as redis_conn:
+            endpoint_username = redis_conn.hget(conference_name, 'username')
+            endpoint_password = redis_conn.hget(conference_name, 'password')
+            inbound_did = redis_conn.hget(conference_name, 'inbound_did')
 
         conference_url = url_for('conference', _external=True, conference_name=conference_name)
 
@@ -124,7 +124,7 @@ def conference_api():
     3. Attach the above application to it
     4. Return endpoint username/password to template
     """
-    conference_name = 'p%s' % (tinyid(8))
+    conference_name = 'p%s' % (make_id(8))
     app_id = create_plivo_application(conference_name)
     endpoint_username = create_plivo_endpoint(conference_name, app_id)
     inbound_did = attach_inbound_did(app_id)
@@ -169,9 +169,8 @@ def conference_exists(conference_name):
 
     Returns True/False
     """
-
-    redis_conn = get_redis_connection()
-    return redis_conn.exists(conference_name)
+    with redis_client() as redis_conn:
+        return redis_conn.exists(conference_name)
 
 
 def create_plivo_endpoint(conference_name, app_id):
@@ -195,10 +194,14 @@ def link_conference(conference_name, endpoint_username, endpoint_password, inbou
     endpoint username and password associated with it.
     """
 
-    redis_conn = get_redis_connection()
-    redis_conn.hmset(conference_name, {'username': endpoint_username, 'password': endpoint_password, 'inbound_did': inbound_did})
-    if config.EXPIRE_CONFERENCE:
-        redis_conn.expire(conference_name, 24*60*60)
+    with redis_client() as redis_conn:
+        redis_conn.hmset(conference_name, {
+            'username': endpoint_username,
+            'password': endpoint_password,
+            'inbound_did': inbound_did
+        })
+        if config.EXPIRE_CONFERENCE:
+            redis_conn.expire(conference_name, 24*60*60)
 
 
 def create_plivo_application(conference_name):
