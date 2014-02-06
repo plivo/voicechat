@@ -1,9 +1,11 @@
+import os
+
 # Plivo Auth ID and Auth Token
-PLIVO_AUTH_ID = ''
-PLIVO_AUTH_TOKEN = ''
+PLIVO_AUTH_ID = os.environ.get('PLIVO_AUTH_ID')
+PLIVO_AUTH_TOKEN = os.environ.get('PLIVO_AUTH_TOKEN')
 
 # Plivo Caller ID
-PLIVO_CALLER_ID = ''
+PLIVO_CALLER_ID = os.environ.get('PLIVO_CALLER_ID', '')
 
 # Wait announcement music when there is only 1 participant in the conference
 HOLD_MUSIC = 'https://s3.amazonaws.com/plivocloud/music.mp3'
