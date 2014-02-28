@@ -1,6 +1,7 @@
 import os
 import time
 import base64
+from flask import g
 import redis
 import config
 import plivo
@@ -20,5 +21,8 @@ def get_redis_connection():
     return rd
 
 def get_plivo_connection():
-    pl = plivo.RestAPI(config.PLIVO_AUTH_ID, config.PLIVO_AUTH_TOKEN)
+    plivo_auth_id = g.get('auth_id', None) or config.PLIVO_AUTH_ID
+    plivo_auth_token = g.get('auth_token', None) or config.PLIVO_AUTH_TOKEN
+
+    pl = plivo.RestAPI(plivo_auth_id, plivo_auth_token)
     return pl

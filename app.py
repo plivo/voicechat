@@ -8,7 +8,8 @@
 """
 
 import os
-from flask import Flask, render_template, request, url_for, make_response, jsonify
+from functools import wraps
+from flask import Flask, render_template, request, url_for, make_response, jsonify, g, Response
 import plivo
 import config
 from utils import get_redis_connection, get_plivo_connection, tinyid
@@ -46,6 +47,36 @@ def conf_music():
     response = make_response(render_template('response_template.xml', response=plivo_response))
     response.headers['content-type'] = 'text/xml'
     return response
+
+
+def set_auth(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    try:
+        g.auth_id = username
+        g.auth_token = password
+    except NoneType:
+        return False
+    return True
+
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not set_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
 
 
 @app.route('/response/conf/<conference_name>/', methods=['GET', 'POST'])
@@ -124,6 +155,7 @@ def conference_api():
     3. Attach the above application to it
     4. Return endpoint username/password to template
     """
+
     conference_name = 'p%s' % (tinyid(8))
     app_id = create_plivo_application(conference_name)
     endpoint_username = create_plivo_endpoint(conference_name, app_id)
@@ -147,6 +179,47 @@ def conference_call_api(conference_name):
     if not config.ALLOW_OUTBOUND_PSTN:
         return jsonify(success=False, message='Calls are disabled')
 
+    if conference_exists(conference_name):
+        to_number = request.form.get('to', None)
+        clid = request.form.get('clid', config.PLIVO_CALLER_ID)
+        answer_url = url_for('conf', _external=True, conference_name=conference_name)
+        plivo_conn = get_plivo_connection()
+        status, _ = plivo_conn.make_call({'to': to_number, 'from': clid, 'answer_url': answer_url, 'answer_method': 'POST'})
+        if status == 201:
+            return jsonify(success=True, message='Call has been queued')
+    return jsonify(success=False, message='Call could not be made')
+
+
+@app.route('/api/v2/conference/', methods=['POST'])
+@requires_auth
+def conference_api_v2():
+    """
+    1. Create a conference name
+    2. Create an endpoint and store in redis with conference name
+    3. Attach the above application to it
+    4. Return endpoint username/password to template
+    """
+    conference_name = 'p%s' % (tinyid(8))
+    app_id = create_plivo_application(conference_name)
+    endpoint_username = create_plivo_endpoint(conference_name, app_id)
+    inbound_did = attach_inbound_did(app_id)
+    link_conference(conference_name, endpoint_username, conference_name, inbound_did)
+
+    conference_url = url_for('conference', _external=True, conference_name=conference_name)
+    return jsonify(conference_url = conference_url, conference_name = conference_name)
+
+
+@app.route('/api/v2/conference/<conference_name>/', methods=['POST'])
+@requires_auth
+def conference_call_api_v2(conference_name):
+    """
+    Parameters -
+    to : The number to be called.
+    clid : The caller id to be used when making the call.
+
+    1. Make an outbound call
+    2. Put the call in the conference
+    """
     if conference_exists(conference_name):
         to_number = request.form.get('to', None)
         clid = request.form.get('clid', config.PLIVO_CALLER_ID)
