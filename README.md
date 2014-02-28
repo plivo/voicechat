@@ -1,6 +1,28 @@
 # [VoiceChat](http://voicechatapi.com/)
 VoiceChat is a set of APIs to create ad-hoc conferences to be used in the browser. Its built using the [Plivo WebSDK](https://plivo.com/docs/sdk/web/) and APIs.
 
+## Step 1: Get a Plivo account
+
+Note down the Auth ID and the Auth Token
+
+
+## Step 2: Create a conference room
+
+    $ curl -XPOST -u "<auth_id>:<auth_token>" http://voicechatapi.com/api/v2/conference/
+    {
+        "conference_name": "prwdbpwrw", 
+        "conference_url": "http://secure-sands-4424.herokuapp.com/prwdbpwrw/"
+    }
+
+## Step 3: Call out people into the conference
+
+    $ curl -XPOST -u "<auth_id>:<auth_token>" -d "to={1415123####}&clid={1415123####}" http://voicechatapi.com/api/v2/conference/<conference_name>/
+    {
+        "success": True,
+        "message": "Call has been queued"
+    }
+
+
 # Looking to self-host?
 
 ## Clone this repo
