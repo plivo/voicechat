@@ -11,12 +11,12 @@ VoiceChat is a set of APIs to create ad-hoc conferences to be used in the browse
 Create a Plivo account if you haven't already
 
 ## Deploying to Heroku
-Create a Heroku account if you haven't.
+Create and verify a Heroku account if you haven't.
 
     $ cd voicechat
     $ heroku create {app_name} -s cedar
     $ git push heroku master
-    $ heroku addons:add redistogo:nano --app {app_name}
+    $ heroku addons:create redistogo:nano --app {app_name}
     $ heroku ps:scale web=1
 
 Add Plivo Auth ID and Auth Token to env from the [dashboard](https://plivo.com/dashboard/).
