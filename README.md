@@ -5,16 +5,21 @@ VoiceChat is a set of APIs to create ad-hoc conferences to be used in the browse
 
 ## Automatically Deploy to Heroku
 
+- Create a [Plivo account](https://manage.plivo.com)
+- Create and **verify** a Heroku account if you don't have one then click the button below.
+
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-## Clone this repo
+## Manual Installation
+
+### Clone this repo
 
     $ git clone https://github.com/plivo/voicechat.git
 
-## Configure
+### Configure
 Create a Plivo account if you haven't already
 
-## Deploying to Heroku
+### Deploying to Heroku
 Create and **verify** a Heroku account if you haven't.
 
     $ cd voicechat
@@ -28,7 +33,7 @@ Add Plivo Auth ID and Auth Token to env from the [dashboard](https://plivo.com/d
     $ heroku config:set PLIVO_AUTH_ID={PLIVO_AUTH_ID}
     $ heroku config:set PLIVO_AUTH_TOKEN={PLIVO_AUTH_TOKEN}
 
-## Test your application
+### Test your application
 Go to {app_name}.herokuapp.com
 
 
@@ -64,4 +69,3 @@ Go to {app_name}.herokuapp.com
         "message": "Call has been queued"
     }
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/plivo/voicechat/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
