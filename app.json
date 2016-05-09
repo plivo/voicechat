@@ -11,9 +11,6 @@
   "repository": "https://github.com/plivo/voicechat",
   "logo": "https://www.voicechatapi.com/static/img/voicechatapi_logo_chrome_icon_500x500.png",
   "success_url": "/",
-  "scripts": {
-    "postdeploy": ""
-  },
   "env": {
     "PLIVO_AUTH_ID": {
       "description": "Your Plivo AuthID from https://manage.plivo.com"
