@@ -3,15 +3,19 @@ VoiceChat is a set of APIs to create ad-hoc conferences to be used in the browse
 
 # Looking to self-host?
 
+## Automatically Deploy to Heroku
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## Clone this repo
 
-    $ git clone git@github.com:plivo/voicechat.git
+    $ git clone https://github.com/plivo/voicechat.git
 
 ## Configure
 Create a Plivo account if you haven't already
 
 ## Deploying to Heroku
-Create and verify a Heroku account if you haven't.
+Create and **verify** a Heroku account if you haven't.
 
     $ cd voicechat
     $ heroku create {app_name} -s cedar
@@ -38,7 +42,7 @@ Go to {app_name}.herokuapp.com
 
     $ curl -XPOST http://voicechatapi.com/api/v1/conference/
     {
-        "conference_name": "p12ygdwt1", 
+        "conference_name": "p12ygdwt1",
         "conference_url": "http://voicechatapi.com/p12ygdwt1/"
     }
 

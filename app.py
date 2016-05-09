@@ -36,7 +36,7 @@ def conf_music():
     """
     Renders the XML to be used for hold music in the conference.
     This XML will be executed by Plivo when there is only 1
-    participant in the conference. The URL to this XML is 
+    participant in the conference. The URL to this XML is
     passed to the Conference XML under the parameter 'waitSound'.
     """
 
@@ -53,7 +53,7 @@ def conf(conference_name):
     """
     Renders the XML to start a conference based on the conference name
     it receives. It checks if the conference exists in our memory (to make
-    sure it hasn't expired). 
+    sure it hasn't expired).
 
     This URL is passed as the Answer URL to Plivo. When the call gets
     answered, the call will be put into a conference.
@@ -86,10 +86,10 @@ def conf(conference_name):
 @app.route('/<conference_name>/', methods=['GET'])
 def conference(conference_name):
     """
-    Returns the HTML page for a particular conference name. The HTML page 
+    Returns the HTML page for a particular conference name. The HTML page
     uses the Plivo WebSDK to register to Plivo and make calls.
     """
-    
+
     if conference_exists(conference_name):
         redis_conn = get_redis_connection()
         endpoint_username = redis_conn.hget(conference_name, 'username')
@@ -99,7 +99,7 @@ def conference(conference_name):
         conference_url = url_for('conference', _external=True, conference_name=conference_name)
 
         data = {
-                'endpoint_username': endpoint_username, 
+                'endpoint_username': endpoint_username,
                 'endpoint_password': endpoint_password,
                 'inbound_did': inbound_did,
                 'conference_name': conference_name,
@@ -185,6 +185,7 @@ def create_plivo_endpoint(conference_name, app_id):
 
     plivo_conn = get_plivo_connection()
     _, response = plivo_conn.create_endpoint({'username': conference_name, 'password': conference_name, 'alias': conference_name, 'app_id': app_id})
+    print "Status: %s\nResponse: %s" % (_, response)
     endpoint_username = response['username']
     return endpoint_username
 
@@ -213,6 +214,7 @@ def create_plivo_application(conference_name):
     answer_url = url_for('conf', _external=True, conference_name=conference_name)
     plivo_conn = get_plivo_connection()
     _, response = plivo_conn.create_application({'app_name': conference_name, 'answer_url': answer_url, 'answer_method': 'POST'})
+    print "Status: %s\nResponse: %s" % (_, response)
     app_id = response['app_id']
     return app_id
 

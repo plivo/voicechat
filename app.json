@@ -1,0 +1,29 @@
+{
+   "name": "VoiceChat API",
+  "description": "VoiceChat is a set of APIs to create conference rooms on the fly to be used in the browser. Its built using the Plivo WebSDK and APIs.",
+  "keywords": [
+    "plivo",
+    "conference",
+    "webrtc",
+    "telephony"
+  ],
+  "website": "https://www.voicechatapi.com/",
+  "repository": "https://github.com/plivo/voicechat",
+  "logo": "https://www.voicechatapi.com/static/img/voicechatapi_logo_chrome_icon_500x500.png",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": ""
+  },
+  "env": {
+    "PLIVO_AUTH_ID": {
+      "description": "Your Plivo AuthID from https://manage.plivo.com"
+    },
+    "PLIVO_AUTH_TOKEN": {
+      "description": "Your Plivo AuthToken from https://manage.plivo.com"
+    }
+  },
+  "image": "heroku/python",
+  "addons": [
+    "redistogo:nano"
+  ]
+}
