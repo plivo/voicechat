@@ -27,3 +27,8 @@ ALLOW_INBOUND_DID = False
 
 # Expire a conference in 24 hours when this flag is enabled.
 EXPIRE_CONFERENCE = not ALLOW_INBOUND_DID
+
+# Redis config options
+REDIS_URL = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+REDIS_MAX_CONNECTIONS = 10
+REDIS_TIMEOUT = 5  # in seconds - in the worst case, will add this much to response time
