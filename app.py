@@ -185,7 +185,7 @@ def create_plivo_endpoint(conference_name, app_id):
 
     plivo_conn = get_plivo_connection()
     _, response = plivo_conn.create_endpoint({'username': conference_name, 'password': conference_name, 'alias': conference_name, 'app_id': app_id})
-    print "Status: %s\nResponse: %s" % (_, response)
+    print ("Status: %s\nResponse: %s" % (_, response))
     endpoint_username = response['username']
     return endpoint_username
 
@@ -214,7 +214,7 @@ def create_plivo_application(conference_name):
     answer_url = url_for('conf', _external=True, conference_name=conference_name)
     plivo_conn = get_plivo_connection()
     _, response = plivo_conn.create_application({'app_name': conference_name, 'answer_url': answer_url, 'answer_method': 'POST'})
-    print "Status: %s\nResponse: %s" % (_, response)
+    print ("Status: %s\nResponse: %s" % (_, response))
     app_id = response['app_id']
     return app_id
 
