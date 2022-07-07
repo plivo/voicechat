@@ -6,6 +6,6 @@ gunicorn==18.0
 itsdangerous==0.23
 plivo==0.9.4
 redis==2.9.0
-requests==2.2.0
+requests==2.20.0
 wsgiref==0.1.2
 yolk==0.4.3
